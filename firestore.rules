@@ -1,0 +1,589 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net (Default-Deny)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Core Primitives
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isVerifiedOwner(uid) {
+      return isVerified() && request.auth.uid == uid;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidStr(val, minLen, maxLen) {
+      return val is string && val.size() >= minLen && val.size() <= maxLen;
+    }
+
+    function isOptStr(data, key, maxLen) {
+      return !(key in data) || (data[key] is string && data[key].size() <= maxLen);
+    }
+
+    function isBoundedStrList(val, maxItems) {
+      return val is list && val.size() <= maxItems && (val.size() == 0 || val[0] is string);
+    }
+
+    // Entity Validation Blueprints
+    function isValidUser(data) {
+      return data.keys().hasAll(['userId', 'email', 'displayName', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['userId', 'email', 'displayName', 'createdAt', 'updatedAt'])
+        && data.userId == request.auth.uid
+        && isValidId(data.userId)
+        && isValidStr(data.email, 3, 254)
+        && isValidStr(data.displayName, 1, 120)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidStudentProfile(data) {
+      return data.keys().hasAll(['userId', 'fullName', 'collegeName', 'course', 'currentSemester', 'onboardingCompleted', 'primaryCareerId', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['userId', 'fullName', 'email', 'collegeName', 'course', 'currentSemester', 'graduationYear', 'bio', 'githubUrl', 'linkedinUrl', 'avatarUrl', 'onboardingCompleted', 'interviewExperienceLevel', 'primaryCareerId', 'secondaryCareerIds', 'weightsJson', 'thresholdsJson', 'createdAt', 'updatedAt'])
+        && data.userId == request.auth.uid
+        && isValidId(data.userId)
+        && isValidStr(data.fullName, 1, 120)
+        && isOptStr(data, 'email', 254)
+        && isValidStr(data.collegeName, 1, 200)
+        && isValidStr(data.course, 1, 80)
+        && data.currentSemester is number && data.currentSemester >= 1 && data.currentSemester <= 12
+        && (!('graduationYear' in data) || (data.graduationYear is number && data.graduationYear >= 2020 && data.graduationYear <= 2040))
+        && isOptStr(data, 'bio', 1000)
+        && isOptStr(data, 'githubUrl', 300)
+        && isOptStr(data, 'linkedinUrl', 300)
+        && isOptStr(data, 'avatarUrl', 500)
+        && data.onboardingCompleted is bool
+        && isOptStr(data, 'interviewExperienceLevel', 60)
+        && isValidStr(data.primaryCareerId, 1, 80)
+        && (!('secondaryCareerIds' in data) || isBoundedStrList(data.secondaryCareerIds, 8))
+        && isOptStr(data, 'weightsJson', 500)
+        && isOptStr(data, 'thresholdsJson', 500)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidCareerGoal(data) {
+      return data.keys().hasAll(['userId', 'careerId', 'isPrimary', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['userId', 'careerId', 'isPrimary', 'targetDate', 'notes', 'createdAt', 'updatedAt'])
+        && data.userId == request.auth.uid
+        && isValidStr(data.careerId, 1, 80)
+        && data.isPrimary is bool
+        && isOptStr(data, 'targetDate', 40)
+        && isOptStr(data, 'notes', 500)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidStudentSkill(data) {
+      return data.keys().hasAll(['userId', 'name', 'selfReportedLevel', 'selfReportedScore', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['userId', 'name', 'category', 'selfReportedLevel', 'selfReportedScore', 'assessmentScore', 'previousAssessmentScore', 'evidenceUrl', 'notes', 'createdAt', 'updatedAt'])
+        && data.userId == request.auth.uid
+        && isValidStr(data.name, 1, 100)
+        && isOptStr(data, 'category', 60)
+        && data.selfReportedLevel in ['Beginner', 'Intermediate', 'Advanced', 'Expert']
+        && data.selfReportedScore is number && data.selfReportedScore >= 0 && data.selfReportedScore <= 100
+        && (!('assessmentScore' in data) || data.assessmentScore == null || (data.assessmentScore is number && data.assessmentScore >= 0 && data.assessmentScore <= 100))
+        && (!('previousAssessmentScore' in data) || data.previousAssessmentScore == null || (data.previousAssessmentScore is number && data.previousAssessmentScore >= 0 && data.previousAssessmentScore <= 100))
+        && isOptStr(data, 'evidenceUrl', 400)
+        && isOptStr(data, 'notes', 500)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidAcademicRecord(data) {
+      return data.keys().hasAll(['userId', 'semester', 'subject', 'marksObtained', 'maxMarks', 'assessmentType', 'assessmentDate', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['userId', 'semester', 'subject', 'marksObtained', 'maxMarks', 'assessmentType', 'assessmentDate', 'credits', 'createdAt', 'updatedAt'])
+        && data.userId == request.auth.uid
+        && data.semester is number && data.semester >= 1 && data.semester <= 12
+        && isValidStr(data.subject, 1, 120)
+        && data.marksObtained is number && data.marksObtained >= 0 && data.marksObtained <= data.maxMarks
+        && data.maxMarks is number && data.maxMarks > 0 && data.maxMarks <= 1000
+        && isValidStr(data.assessmentType, 1, 60)
+        && isValidStr(data.assessmentDate, 4, 30)
+        && (!('credits' in data) || (data.credits is number && data.credits >= 1 && data.credits <= 20))
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidAssessment(data) {
+      return data.keys().hasAll(['userId', 'skillName', 'score', 'source', 'createdAt'])
+        && data.keys().hasOnly(['userId', 'skillName', 'score', 'source', 'assessedAt', 'createdAt'])
+        && data.userId == request.auth.uid
+        && isValidStr(data.skillName, 1, 100)
+        && data.score is number && data.score >= 0 && data.score <= 100
+        && isValidStr(data.source, 1, 100)
+        && isOptStr(data, 'assessedAt', 40)
+        && data.createdAt is timestamp;
+    }
+
+    function isValidProject(data) {
+      return data.keys().hasAll(['userId', 'name', 'description', 'category', 'technologies', 'status', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['userId', 'name', 'description', 'category', 'technologies', 'githubUrl', 'liveUrl', 'startDate', 'completionDate', 'status', 'createdAt', 'updatedAt'])
+        && data.userId == request.auth.uid
+        && isValidStr(data.name, 1, 150)
+        && isValidStr(data.description, 1, 1500)
+        && isValidStr(data.category, 1, 80)
+        && isBoundedStrList(data.technologies, 20)
+        && isOptStr(data, 'githubUrl', 400)
+        && isOptStr(data, 'liveUrl', 400)
+        && isOptStr(data, 'startDate', 30)
+        && isOptStr(data, 'completionDate', 30)
+        && data.status in ['Planning', 'In Progress', 'Completed']
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidCertification(data) {
+      return data.keys().hasAll(['userId', 'name', 'issuer', 'issueDate', 'relatedSkills', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['userId', 'name', 'issuer', 'issueDate', 'credentialUrl', 'relatedSkills', 'createdAt', 'updatedAt'])
+        && data.userId == request.auth.uid
+        && isValidStr(data.name, 1, 150)
+        && isValidStr(data.issuer, 1, 150)
+        && isValidStr(data.issueDate, 4, 30)
+        && isOptStr(data, 'credentialUrl', 400)
+        && isBoundedStrList(data.relatedSkills, 15)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidActivity(data) {
+      return data.keys().hasAll(['userId', 'title', 'type', 'date', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['userId', 'title', 'type', 'organization', 'date', 'description', 'relatedSkills', 'createdAt', 'updatedAt'])
+        && data.userId == request.auth.uid
+        && isValidStr(data.title, 1, 150)
+        && isValidStr(data.type, 1, 60)
+        && isOptStr(data, 'organization', 150)
+        && isValidStr(data.date, 4, 30)
+        && isOptStr(data, 'description', 1000)
+        && (!('relatedSkills' in data) || isBoundedStrList(data.relatedSkills, 15))
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidInterview(data) {
+      return data.keys().hasAll(['userId', 'role', 'topic', 'difficulty', 'overallScore', 'questionsCount', 'createdAt'])
+        && data.keys().hasOnly(['userId', 'role', 'topic', 'difficulty', 'overallScore', 'questionsCount', 'strongTopics', 'weakTopics', 'source', 'completedAt', 'createdAt'])
+        && data.userId == request.auth.uid
+        && isValidStr(data.role, 1, 100)
+        && isValidStr(data.topic, 1, 100)
+        && data.difficulty in ['Beginner', 'Intermediate', 'Advanced']
+        && data.overallScore is number && data.overallScore >= 0 && data.overallScore <= 100
+        && data.questionsCount is number && data.questionsCount >= 1 && data.questionsCount <= 20
+        && (!('strongTopics' in data) || isBoundedStrList(data.strongTopics, 10))
+        && (!('weakTopics' in data) || isBoundedStrList(data.weakTopics, 10))
+        && isOptStr(data, 'source', 40)
+        && isOptStr(data, 'completedAt', 40)
+        && data.createdAt is timestamp;
+    }
+
+    function isValidInterviewFeedback(data) {
+      return data.keys().hasAll(['userId', 'interviewId', 'question', 'userAnswer', 'score', 'createdAt'])
+        && data.keys().hasOnly(['userId', 'interviewId', 'topic', 'question', 'userAnswer', 'score', 'strengths', 'weaknesses', 'improvements', 'exampleAnswer', 'conceptExplanation', 'createdAt'])
+        && data.userId == request.auth.uid
+        && isValidId(data.interviewId)
+        && isOptStr(data, 'topic', 100)
+        && isValidStr(data.question, 1, 1000)
+        && isValidStr(data.userAnswer, 1, 4000)
+        && data.score is number && data.score >= 0 && data.score <= 100
+        && (!('strengths' in data) || isBoundedStrList(data.strengths, 10))
+        && (!('weaknesses' in data) || isBoundedStrList(data.weaknesses, 10))
+        && (!('improvements' in data) || isBoundedStrList(data.improvements, 10))
+        && isOptStr(data, 'exampleAnswer', 3000)
+        && isOptStr(data, 'conceptExplanation', 3000)
+        && data.createdAt is timestamp;
+    }
+
+    function isValidRecommendation(data) {
+      return data.keys().hasAll(['userId', 'title', 'explanation', 'relatedSkill', 'priority', 'source', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['userId', 'title', 'explanation', 'relatedSkill', 'reason', 'priority', 'difficulty', 'estimatedTime', 'expectedOutcome', 'suggestedNextAction', 'source', 'addedToActionPlan', 'createdAt', 'updatedAt'])
+        && data.userId == request.auth.uid
+        && isValidStr(data.title, 1, 200)
+        && isValidStr(data.explanation, 1, 1500)
+        && isValidStr(data.relatedSkill, 1, 100)
+        && isOptStr(data, 'reason', 600)
+        && data.priority in ['High', 'Medium', 'Low']
+        && isOptStr(data, 'difficulty', 40)
+        && isOptStr(data, 'estimatedTime', 80)
+        && isOptStr(data, 'expectedOutcome', 600)
+        && isOptStr(data, 'suggestedNextAction', 500)
+        && isValidStr(data.source, 1, 40)
+        && (!('addedToActionPlan' in data) || data.addedToActionPlan is bool)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidLearningRoadmap(data) {
+      return data.keys().hasAll(['userId', 'careerId', 'durationDays', 'status', 'tasks', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['userId', 'careerId', 'careerTitle', 'durationDays', 'status', 'source', 'tasks', 'createdAt', 'updatedAt'])
+        && data.userId == request.auth.uid
+        && isValidStr(data.careerId, 1, 80)
+        && isOptStr(data, 'careerTitle', 100)
+        && data.durationDays in [30, 60, 90]
+        && data.status in ['Active', 'Paused', 'Completed']
+        && isOptStr(data, 'source', 40)
+        && data.tasks is list && data.tasks.size() <= 60
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidActionPlan(data) {
+      return data.keys().hasAll(['userId', 'title', 'careerId', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['userId', 'title', 'careerId', 'createdAt', 'updatedAt'])
+        && data.userId == request.auth.uid
+        && isValidStr(data.title, 1, 150)
+        && isValidStr(data.careerId, 1, 80)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidActionPlanTask(data) {
+      return data.keys().hasAll(['userId', 'title', 'category', 'priority', 'status', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['userId', 'title', 'description', 'category', 'relatedSkill', 'dueDate', 'priority', 'estimatedDuration', 'status', 'notes', 'completedAt', 'createdAt', 'updatedAt'])
+        && data.userId == request.auth.uid
+        && isValidStr(data.title, 1, 200)
+        && isOptStr(data, 'description', 1000)
+        && isValidStr(data.category, 1, 60)
+        && isOptStr(data, 'relatedSkill', 100)
+        && isOptStr(data, 'dueDate', 30)
+        && data.priority in ['High', 'Medium', 'Low']
+        && isOptStr(data, 'estimatedDuration', 60)
+        && data.status in ['Not Started', 'In Progress', 'Completed']
+        && isOptStr(data, 'notes', 1000)
+        && isOptStr(data, 'completedAt', 40)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidProgressRecord(data) {
+      return data.keys().hasAll(['userId', 'date', 'readinessScore', 'skillMatchScore', 'createdAt'])
+        && data.keys().hasOnly(['userId', 'date', 'readinessScore', 'skillMatchScore', 'tasksCompleted', 'note', 'createdAt'])
+        && data.userId == request.auth.uid
+        && isValidStr(data.date, 4, 30)
+        && data.readinessScore is number && data.readinessScore >= 0 && data.readinessScore <= 100
+        && data.skillMatchScore is number && data.skillMatchScore >= 0 && data.skillMatchScore <= 100
+        && (!('tasksCompleted' in data) || (data.tasksCompleted is number && data.tasksCompleted >= 0))
+        && isOptStr(data, 'note', 300)
+        && data.createdAt is timestamp;
+    }
+
+    function isValidStudentAchievement(data) {
+      return data.keys().hasAll(['userId', 'achievementCode', 'earnedDate', 'createdAt'])
+        && data.keys().hasOnly(['userId', 'achievementCode', 'earnedDate', 'createdAt'])
+        && data.userId == request.auth.uid
+        && isValidStr(data.achievementCode, 1, 60)
+        && isValidStr(data.earnedDate, 4, 40)
+        && data.createdAt is timestamp;
+    }
+
+    function isValidLearningStreak(data) {
+      return data.keys().hasAll(['userId', 'currentStreak', 'longestStreak', 'activeDates', 'totalCompletedTasks', 'updatedAt'])
+        && data.keys().hasOnly(['userId', 'currentStreak', 'longestStreak', 'activeDates', 'totalCompletedTasks', 'updatedAt'])
+        && data.userId == request.auth.uid
+        && data.currentStreak is number && data.currentStreak >= 0 && data.currentStreak <= 3650
+        && data.longestStreak is number && data.longestStreak >= 0 && data.longestStreak <= 3650
+        && isBoundedStrList(data.activeDates, 400)
+        && data.totalCompletedTasks is number && data.totalCompletedTasks >= 0
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidNotification(data) {
+      return data.keys().hasAll(['userId', 'title', 'message', 'type', 'read', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['userId', 'title', 'message', 'type', 'read', 'targetRoute', 'createdAt', 'updatedAt'])
+        && data.userId == request.auth.uid
+        && isValidStr(data.title, 1, 160)
+        && isValidStr(data.message, 1, 500)
+        && isValidStr(data.type, 1, 40)
+        && data.read is bool
+        && isOptStr(data, 'targetRoute', 100)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    // Health check test document
+    match /test/connection {
+      allow get: if true;
+    }
+
+    // 1. Users (Strict PII Isolation - no list)
+    match /users/{userId} {
+      allow get: if isValidId(userId) && isOwner(userId);
+      allow create: if isVerifiedOwner(userId) && isValidId(userId) && isValidUser(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerifiedOwner(userId) && isValidId(userId) && isValidUser(incoming())
+        && incoming().userId == existing().userId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'email', 'updatedAt']);
+      allow delete: if isVerifiedOwner(userId) && isValidId(userId);
+    }
+
+    // 2. Student Profiles (Strict PII Isolation - no list)
+    match /studentProfiles/{userId} {
+      allow get: if isValidId(userId) && isOwner(userId);
+      allow create: if isVerifiedOwner(userId) && isValidId(userId) && isValidStudentProfile(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerifiedOwner(userId) && isValidId(userId) && isValidStudentProfile(incoming())
+        && incoming().userId == existing().userId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          incoming().diff(existing()).affectedKeys().hasOnly(['fullName', 'email', 'collegeName', 'course', 'currentSemester', 'graduationYear', 'bio', 'githubUrl', 'linkedinUrl', 'avatarUrl', 'onboardingCompleted', 'interviewExperienceLevel', 'primaryCareerId', 'secondaryCareerIds', 'updatedAt']) ||
+          incoming().diff(existing()).affectedKeys().hasOnly(['weightsJson', 'thresholdsJson', 'updatedAt'])
+        );
+      allow delete: if isVerifiedOwner(userId) && isValidId(userId);
+    }
+
+    // 3. Career Goals
+    match /careerGoals/{goalId} {
+      allow get: if isValidId(goalId) && isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() && isValidId(goalId) && isValidCareerGoal(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerified() && isValidId(goalId) && isValidCareerGoal(incoming())
+        && existing().userId == request.auth.uid
+        && incoming().userId == existing().userId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['careerId', 'isPrimary', 'targetDate', 'notes', 'updatedAt']);
+      allow delete: if isVerified() && isValidId(goalId) && existing().userId == request.auth.uid;
+    }
+
+    // 4. Career Requirements (Reference Data)
+    match /careerRequirements/{careerId} {
+      allow get: if isSignedIn() && isValidId(careerId);
+      allow list: if isSignedIn();
+      allow write: if false;
+    }
+
+    // 5. Student Skills
+    match /studentSkills/{skillId} {
+      allow get: if isValidId(skillId) && isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() && isValidId(skillId) && isValidStudentSkill(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerified() && isValidId(skillId) && isValidStudentSkill(incoming())
+        && existing().userId == request.auth.uid
+        && incoming().userId == existing().userId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'category', 'selfReportedLevel', 'selfReportedScore', 'assessmentScore', 'previousAssessmentScore', 'evidenceUrl', 'notes', 'updatedAt']);
+      allow delete: if isVerified() && isValidId(skillId) && existing().userId == request.auth.uid;
+    }
+
+    // 6. Academic Records
+    match /academicRecords/{recordId} {
+      allow get: if isValidId(recordId) && isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() && isValidId(recordId) && isValidAcademicRecord(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerified() && isValidId(recordId) && isValidAcademicRecord(incoming())
+        && existing().userId == request.auth.uid
+        && incoming().userId == existing().userId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['semester', 'subject', 'marksObtained', 'maxMarks', 'assessmentType', 'assessmentDate', 'credits', 'updatedAt']);
+      allow delete: if isVerified() && isValidId(recordId) && existing().userId == request.auth.uid;
+    }
+
+    // 7. Assessments (Append-only history)
+    match /assessments/{assessmentId} {
+      allow get: if isValidId(assessmentId) && isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() && isValidId(assessmentId) && isValidAssessment(incoming()) && incoming().createdAt == request.time;
+      allow update: if false;
+      allow delete: if isVerified() && isValidId(assessmentId) && existing().userId == request.auth.uid;
+    }
+
+    // 8. Projects
+    match /projects/{projectId} {
+      allow get: if isValidId(projectId) && isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() && isValidId(projectId) && isValidProject(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerified() && isValidId(projectId) && isValidProject(incoming())
+        && existing().userId == request.auth.uid
+        && incoming().userId == existing().userId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'description', 'category', 'technologies', 'githubUrl', 'liveUrl', 'startDate', 'completionDate', 'status', 'updatedAt']);
+      allow delete: if isVerified() && isValidId(projectId) && existing().userId == request.auth.uid;
+    }
+
+    // 9. Certifications
+    match /certifications/{certId} {
+      allow get: if isValidId(certId) && isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() && isValidId(certId) && isValidCertification(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerified() && isValidId(certId) && isValidCertification(incoming())
+        && existing().userId == request.auth.uid
+        && incoming().userId == existing().userId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'issuer', 'issueDate', 'credentialUrl', 'relatedSkills', 'updatedAt']);
+      allow delete: if isVerified() && isValidId(certId) && existing().userId == request.auth.uid;
+    }
+
+    // 10. Activities
+    match /activities/{activityId} {
+      allow get: if isValidId(activityId) && isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() && isValidId(activityId) && isValidActivity(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerified() && isValidId(activityId) && isValidActivity(incoming())
+        && existing().userId == request.auth.uid
+        && incoming().userId == existing().userId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'type', 'organization', 'date', 'description', 'relatedSkills', 'updatedAt']);
+      allow delete: if isVerified() && isValidId(activityId) && existing().userId == request.auth.uid;
+    }
+
+    // 11. Interviews (Immutable completed sessions)
+    match /interviews/{interviewId} {
+      allow get: if isValidId(interviewId) && isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() && isValidId(interviewId) && isValidInterview(incoming()) && incoming().createdAt == request.time;
+      allow update: if false;
+      allow delete: if isVerified() && isValidId(interviewId) && existing().userId == request.auth.uid;
+    }
+
+    // 12. Interview Feedback (Immutable per-question record linked to interview)
+    match /interviewFeedback/{feedbackId} {
+      allow get: if isValidId(feedbackId) && isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() && isValidId(feedbackId) && isValidInterviewFeedback(incoming())
+        && incoming().createdAt == request.time
+        && exists(/databases/$(database)/documents/interviews/$(incoming().interviewId));
+      allow update: if false;
+      allow delete: if isVerified() && isValidId(feedbackId) && existing().userId == request.auth.uid;
+    }
+
+    // 13. Recommendations
+    match /recommendations/{recId} {
+      allow get: if isValidId(recId) && isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() && isValidId(recId) && isValidRecommendation(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerified() && isValidId(recId) && isValidRecommendation(incoming())
+        && existing().userId == request.auth.uid
+        && incoming().userId == existing().userId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['addedToActionPlan', 'updatedAt']);
+      allow delete: if isVerified() && isValidId(recId) && existing().userId == request.auth.uid;
+    }
+
+    // 14. Learning Roadmaps
+    match /learningRoadmaps/{roadmapId} {
+      allow get: if isValidId(roadmapId) && isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() && isValidId(roadmapId) && isValidLearningRoadmap(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerified() && isValidId(roadmapId) && isValidLearningRoadmap(incoming())
+        && existing().userId == request.auth.uid
+        && incoming().userId == existing().userId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          (existing().status != 'Completed' && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'tasks', 'updatedAt'])) ||
+          (existing().status != 'Completed' && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updatedAt']))
+        );
+      allow delete: if isVerified() && isValidId(roadmapId) && existing().userId == request.auth.uid;
+    }
+
+    // 15. Action Plans
+    match /actionPlans/{planId} {
+      allow get: if isValidId(planId) && isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() && isValidId(planId) && isValidActionPlan(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerified() && isValidId(planId) && isValidActionPlan(incoming())
+        && existing().userId == request.auth.uid
+        && incoming().userId == existing().userId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'careerId', 'updatedAt']);
+      allow delete: if isVerified() && isValidId(planId) && existing().userId == request.auth.uid;
+    }
+
+    // 16. Action Plan Tasks
+    match /actionPlanTasks/{taskId} {
+      allow get: if isValidId(taskId) && isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() && isValidId(taskId) && isValidActionPlanTask(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerified() && isValidId(taskId) && isValidActionPlanTask(incoming())
+        && existing().userId == request.auth.uid
+        && incoming().userId == existing().userId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          incoming().diff(existing()).affectedKeys().hasOnly(['status', 'completedAt', 'updatedAt']) ||
+          incoming().diff(existing()).affectedKeys().hasOnly(['title', 'description', 'category', 'relatedSkill', 'dueDate', 'priority', 'estimatedDuration', 'status', 'notes', 'completedAt', 'updatedAt'])
+        );
+      allow delete: if isVerified() && isValidId(taskId) && existing().userId == request.auth.uid;
+    }
+
+    // 17. Progress Records (Append-only snapshots)
+    match /progressRecords/{progressId} {
+      allow get: if isValidId(progressId) && isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() && isValidId(progressId) && isValidProgressRecord(incoming()) && incoming().createdAt == request.time;
+      allow update: if false;
+      allow delete: if isVerified() && isValidId(progressId) && existing().userId == request.auth.uid;
+    }
+
+    // 18. Achievements Catalog (Reference Data)
+    match /achievements/{achievementId} {
+      allow get: if isSignedIn() && isValidId(achievementId);
+      allow list: if isSignedIn();
+      allow write: if false;
+    }
+
+    // 19. Student Achievements
+    match /studentAchievements/{studentAchievementId} {
+      allow get: if isValidId(studentAchievementId) && isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() && isValidId(studentAchievementId) && isValidStudentAchievement(incoming()) && incoming().createdAt == request.time;
+      allow update: if false;
+      allow delete: if isVerified() && isValidId(studentAchievementId) && existing().userId == request.auth.uid;
+    }
+
+    // 20. Learning Streaks
+    match /learningStreaks/{userId} {
+      allow get: if isValidId(userId) && isOwner(userId);
+      allow create: if isVerifiedOwner(userId) && isValidId(userId) && isValidLearningStreak(incoming()) && incoming().updatedAt == request.time;
+      allow update: if isVerifiedOwner(userId) && isValidId(userId) && isValidLearningStreak(incoming())
+        && incoming().userId == existing().userId
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['currentStreak', 'longestStreak', 'activeDates', 'totalCompletedTasks', 'updatedAt']);
+      allow delete: if isVerifiedOwner(userId) && isValidId(userId);
+    }
+
+    // 21. Notifications
+    match /notifications/{notificationId} {
+      allow get: if isValidId(notificationId) && isOwner(existing().userId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() && isValidId(notificationId) && isValidNotification(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerified() && isValidId(notificationId) && isValidNotification(incoming())
+        && existing().userId == request.auth.uid
+        && incoming().userId == existing().userId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['read', 'updatedAt']);
+      allow delete: if isVerified() && isValidId(notificationId) && existing().userId == request.auth.uid;
+    }
+  }
+}

@@ -1,0 +1,379 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Authenticated user account metadata isolated strictly to owner.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "format": "email", "maxLength": 254 },
+        "displayName": { "type": "string", "maxLength": 120 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "email", "displayName", "createdAt", "updatedAt"]
+    },
+    "StudentProfile": {
+      "title": "StudentProfile",
+      "description": "Student academic, personal, and onboarding profile owned by userId.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "fullName": { "type": "string", "maxLength": 120 },
+        "email": { "type": "string", "format": "email", "maxLength": 254 },
+        "collegeName": { "type": "string", "maxLength": 200 },
+        "course": { "type": "string", "maxLength": 80 },
+        "currentSemester": { "type": "number" },
+        "graduationYear": { "type": "number" },
+        "bio": { "type": "string", "maxLength": 1000 },
+        "githubUrl": { "type": "string", "maxLength": 300 },
+        "linkedinUrl": { "type": "string", "maxLength": 300 },
+        "avatarUrl": { "type": "string", "maxLength": 500 },
+        "onboardingCompleted": { "type": "boolean" },
+        "interviewExperienceLevel": { "type": "string", "maxLength": 60 },
+        "primaryCareerId": { "type": "string", "maxLength": 80 },
+        "secondaryCareerIds": { "type": "array" },
+        "weightsJson": { "type": "string", "maxLength": 500 },
+        "thresholdsJson": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "fullName", "collegeName", "course", "currentSemester", "onboardingCompleted", "primaryCareerId", "createdAt", "updatedAt"]
+    },
+    "CareerGoal": {
+      "title": "CareerGoal",
+      "description": "Student selected primary and secondary career targets.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "careerId": { "type": "string", "maxLength": 80 },
+        "isPrimary": { "type": "boolean" },
+        "targetDate": { "type": "string", "maxLength": 40 },
+        "notes": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "careerId", "isPrimary", "createdAt", "updatedAt"]
+    },
+    "CareerRequirement": {
+      "title": "CareerRequirement",
+      "description": "Reference dataset defining career skill requirements.",
+      "type": "object",
+      "properties": {
+        "careerId": { "type": "string", "maxLength": 80 },
+        "title": { "type": "string", "maxLength": 120 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "requiredSkills": { "type": "array" }
+      },
+      "required": ["careerId", "title", "description", "requiredSkills"]
+    },
+    "StudentSkill": {
+      "title": "StudentSkill",
+      "description": "Technical skill tracked by a student with self-reported and assessment scores.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "maxLength": 100 },
+        "category": { "type": "string", "maxLength": 60 },
+        "selfReportedLevel": { "type": "string", "enum": ["Beginner", "Intermediate", "Advanced", "Expert"] },
+        "selfReportedScore": { "type": "number" },
+        "assessmentScore": { "type": "number" },
+        "previousAssessmentScore": { "type": "number" },
+        "evidenceUrl": { "type": "string", "maxLength": 400 },
+        "notes": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "name", "selfReportedLevel", "selfReportedScore", "createdAt", "updatedAt"]
+    },
+    "AcademicRecord": {
+      "title": "AcademicRecord",
+      "description": "Semester subject assessment record.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "semester": { "type": "number" },
+        "subject": { "type": "string", "maxLength": 120 },
+        "marksObtained": { "type": "number" },
+        "maxMarks": { "type": "number" },
+        "assessmentType": { "type": "string", "maxLength": 60 },
+        "assessmentDate": { "type": "string", "maxLength": 30 },
+        "credits": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "semester", "subject", "marksObtained", "maxMarks", "assessmentType", "assessmentDate", "createdAt", "updatedAt"]
+    },
+    "Assessment": {
+      "title": "Assessment",
+      "description": "Skill assessment history entry.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "skillName": { "type": "string", "maxLength": 100 },
+        "score": { "type": "number" },
+        "source": { "type": "string", "maxLength": 100 },
+        "assessedAt": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "skillName", "score", "source", "createdAt"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Student software or technical project.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "maxLength": 150 },
+        "description": { "type": "string", "maxLength": 1500 },
+        "category": { "type": "string", "maxLength": 80 },
+        "technologies": { "type": "array" },
+        "githubUrl": { "type": "string", "maxLength": 400 },
+        "liveUrl": { "type": "string", "maxLength": 400 },
+        "startDate": { "type": "string", "maxLength": 30 },
+        "completionDate": { "type": "string", "maxLength": 30 },
+        "status": { "type": "string", "enum": ["Planning", "In Progress", "Completed"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "name", "description", "category", "technologies", "status", "createdAt", "updatedAt"]
+    },
+    "Certification": {
+      "title": "Certification",
+      "description": "Verified course or vendor certification.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "maxLength": 150 },
+        "issuer": { "type": "string", "maxLength": 150 },
+        "issueDate": { "type": "string", "maxLength": 30 },
+        "credentialUrl": { "type": "string", "maxLength": 400 },
+        "relatedSkills": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "name", "issuer", "issueDate", "relatedSkills", "createdAt", "updatedAt"]
+    },
+    "Activity": {
+      "title": "Activity",
+      "description": "Hackathon, workshop, internship, or coding competition record.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "maxLength": 150 },
+        "type": { "type": "string", "maxLength": 60 },
+        "organization": { "type": "string", "maxLength": 150 },
+        "date": { "type": "string", "maxLength": 30 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "relatedSkills": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "type", "date", "createdAt", "updatedAt"]
+    },
+    "Interview": {
+      "title": "Interview",
+      "description": "AI text-based mock interview session.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "role": { "type": "string", "maxLength": 100 },
+        "topic": { "type": "string", "maxLength": 100 },
+        "difficulty": { "type": "string", "enum": ["Beginner", "Intermediate", "Advanced"] },
+        "overallScore": { "type": "number" },
+        "questionsCount": { "type": "number" },
+        "strongTopics": { "type": "array" },
+        "weakTopics": { "type": "array" },
+        "source": { "type": "string", "maxLength": 40 },
+        "completedAt": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "role", "topic", "difficulty", "overallScore", "questionsCount", "createdAt"]
+    },
+    "InterviewFeedback": {
+      "title": "InterviewFeedback",
+      "description": "Per-question evaluation feedback from a mock interview.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "interviewId": { "type": "string", "maxLength": 128 },
+        "topic": { "type": "string", "maxLength": 100 },
+        "question": { "type": "string", "maxLength": 1000 },
+        "userAnswer": { "type": "string", "maxLength": 4000 },
+        "score": { "type": "number" },
+        "strengths": { "type": "array" },
+        "weaknesses": { "type": "array" },
+        "improvements": { "type": "array" },
+        "exampleAnswer": { "type": "string", "maxLength": 3000 },
+        "conceptExplanation": { "type": "string", "maxLength": 3000 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "interviewId", "question", "userAnswer", "score", "createdAt"]
+    },
+    "Recommendation": {
+      "title": "Recommendation",
+      "description": "Personalized AI or rule-based career recommendation.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "maxLength": 200 },
+        "explanation": { "type": "string", "maxLength": 1500 },
+        "relatedSkill": { "type": "string", "maxLength": 100 },
+        "reason": { "type": "string", "maxLength": 600 },
+        "priority": { "type": "string", "enum": ["High", "Medium", "Low"] },
+        "difficulty": { "type": "string", "maxLength": 40 },
+        "estimatedTime": { "type": "string", "maxLength": 80 },
+        "expectedOutcome": { "type": "string", "maxLength": 600 },
+        "suggestedNextAction": { "type": "string", "maxLength": 500 },
+        "source": { "type": "string", "maxLength": 40 },
+        "addedToActionPlan": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "explanation", "relatedSkill", "priority", "source", "createdAt", "updatedAt"]
+    },
+    "LearningRoadmap": {
+      "title": "LearningRoadmap",
+      "description": "30/60/90-day structured personalized learning roadmap.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "careerId": { "type": "string", "maxLength": 80 },
+        "careerTitle": { "type": "string", "maxLength": 100 },
+        "durationDays": { "type": "number" },
+        "status": { "type": "string", "enum": ["Active", "Paused", "Completed"] },
+        "source": { "type": "string", "maxLength": 40 },
+        "tasks": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "careerId", "durationDays", "status", "tasks", "createdAt", "updatedAt"]
+    },
+    "ActionPlan": {
+      "title": "ActionPlan",
+      "description": "Student action plan container.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "maxLength": 150 },
+        "careerId": { "type": "string", "maxLength": 80 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "careerId", "createdAt", "updatedAt"]
+    },
+    "ActionPlanTask": {
+      "title": "ActionPlanTask",
+      "description": "Individual student action plan task.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "category": { "type": "string", "maxLength": 60 },
+        "relatedSkill": { "type": "string", "maxLength": 100 },
+        "dueDate": { "type": "string", "maxLength": 30 },
+        "priority": { "type": "string", "enum": ["High", "Medium", "Low"] },
+        "estimatedDuration": { "type": "string", "maxLength": 60 },
+        "status": { "type": "string", "enum": ["Not Started", "In Progress", "Completed"] },
+        "notes": { "type": "string", "maxLength": 1000 },
+        "completedAt": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "category", "priority", "status", "createdAt", "updatedAt"]
+    },
+    "ProgressRecord": {
+      "title": "ProgressRecord",
+      "description": "Historical readiness and activity snapshot.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "date": { "type": "string", "maxLength": 30 },
+        "readinessScore": { "type": "number" },
+        "skillMatchScore": { "type": "number" },
+        "tasksCompleted": { "type": "number" },
+        "note": { "type": "string", "maxLength": 300 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "date", "readinessScore", "skillMatchScore", "createdAt"]
+    },
+    "Achievement": {
+      "title": "Achievement",
+      "description": "Application-defined badge definition.",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "maxLength": 60 },
+        "title": { "type": "string", "maxLength": 120 },
+        "description": { "type": "string", "maxLength": 300 },
+        "criteria": { "type": "string", "maxLength": 300 }
+      },
+      "required": ["code", "title", "description", "criteria"]
+    },
+    "StudentAchievement": {
+      "title": "StudentAchievement",
+      "description": "Unlocked achievement awarded by validated application events.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "achievementCode": { "type": "string", "maxLength": 60 },
+        "earnedDate": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "achievementCode", "earnedDate", "createdAt"]
+    },
+    "LearningStreak": {
+      "title": "LearningStreak",
+      "description": "Consecutive qualifying activity dates per student.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "currentStreak": { "type": "number" },
+        "longestStreak": { "type": "number" },
+        "activeDates": { "type": "array" },
+        "totalCompletedTasks": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "currentStreak", "longestStreak", "activeDates", "totalCompletedTasks", "updatedAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "User-specific notification item.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "maxLength": 160 },
+        "message": { "type": "string", "maxLength": 500 },
+        "type": { "type": "string", "maxLength": 40 },
+        "read": { "type": "boolean" },
+        "targetRoute": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "message", "type", "read", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": { "schema": { "$ref": "#/entities/User" }, "description": "Private user account documents." },
+    "/studentProfiles/{userId}": { "schema": { "$ref": "#/entities/StudentProfile" }, "description": "Private student profile documents." },
+    "/careerGoals/{goalId}": { "schema": { "$ref": "#/entities/CareerGoal" }, "description": "Student career goal records." },
+    "/careerRequirements/{careerId}": { "schema": { "$ref": "#/entities/CareerRequirement" }, "description": "Read-only reference career requirements." },
+    "/studentSkills/{skillId}": { "schema": { "$ref": "#/entities/StudentSkill" }, "description": "Student tracked skills." },
+    "/academicRecords/{recordId}": { "schema": { "$ref": "#/entities/AcademicRecord" }, "description": "Student semester and subject marks." },
+    "/assessments/{assessmentId}": { "schema": { "$ref": "#/entities/Assessment" }, "description": "Student skill assessment history." },
+    "/projects/{projectId}": { "schema": { "$ref": "#/entities/Project" }, "description": "Student project portfolio items." },
+    "/certifications/{certId}": { "schema": { "$ref": "#/entities/Certification" }, "description": "Student certifications." },
+    "/activities/{activityId}": { "schema": { "$ref": "#/entities/Activity" }, "description": "Hackathons, workshops, and activities." },
+    "/interviews/{interviewId}": { "schema": { "$ref": "#/entities/Interview" }, "description": "Mock interview session summaries." },
+    "/interviewFeedback/{feedbackId}": { "schema": { "$ref": "#/entities/InterviewFeedback" }, "description": "Per-question interview evaluations." },
+    "/recommendations/{recId}": { "schema": { "$ref": "#/entities/Recommendation" }, "description": "Personalized recommendations." },
+    "/learningRoadmaps/{roadmapId}": { "schema": { "$ref": "#/entities/LearningRoadmap" }, "description": "30/60/90-day learning roadmaps." },
+    "/actionPlans/{planId}": { "schema": { "$ref": "#/entities/ActionPlan" }, "description": "Action plan metadata." },
+    "/actionPlanTasks/{taskId}": { "schema": { "$ref": "#/entities/ActionPlanTask" }, "description": "Action plan tasks." },
+    "/progressRecords/{progressId}": { "schema": { "$ref": "#/entities/ProgressRecord" }, "description": "Historical readiness snapshots." },
+    "/achievements/{achievementId}": { "schema": { "$ref": "#/entities/Achievement" }, "description": "Read-only reference badge catalog." },
+    "/studentAchievements/{studentAchievementId}": { "schema": { "$ref": "#/entities/StudentAchievement" }, "description": "Earned student achievements." },
+    "/learningStreaks/{userId}": { "schema": { "$ref": "#/entities/LearningStreak" }, "description": "Student daily learning streak tracker." },
+    "/notifications/{notificationId}": { "schema": { "$ref": "#/entities/Notification" }, "description": "Student-specific notifications." }
+  }
+}

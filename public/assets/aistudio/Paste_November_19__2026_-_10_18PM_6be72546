@@ -1,0 +1,1392 @@
+# MASTER DEVELOPMENT PROMPT – STUDENTPULSE AI
+
+## Build a Complete AI-Powered Student Success, Skill Analysis and Career Readiness Platform
+
+Act as an expert full-stack software developer, UI/UX designer, AI engineer, database architect, and product designer.
+
+I want you to design and develop a complete, modern, professional, responsive, and fully functional web application named **StudentPulse AI**.
+
+This is a major college software development project. The final website must look like a professional commercial SaaS platform and demonstrate real functionality, not just a frontend design or static prototype.
+
+Build the entire application with a polished user interface, functional navigation, backend integration, persistent database, AI features, analytics, interactive charts, authentication, and sample demonstration data.
+
+Do not stop after creating the landing page. Build all the important modules and connect them together.
+
+---
+
+# PART 1 – PROJECT IDENTITY
+
+**Project Name:** StudentPulse AI
+
+**Tagline:** Understand Your Skills. Discover Your Gaps. Build Your Future.
+
+**Category:** AI-Powered Student Success, Skill Analysis and Career Readiness Platform.
+
+**Main Purpose:**
+
+StudentPulse AI is an intelligent platform designed to help college students evaluate their academic performance, technical skills, projects, certifications, interview performance, and career readiness in one centralized application.
+
+The platform analyzes a student's existing abilities against the requirements of a selected career.
+
+It identifies potential skill gaps and generates personalized AI-powered recommendations, learning roadmaps, improvement plans, and interview preparation activities.
+
+The ultimate goal is to help students become more skilled, confident, and career-ready.
+
+### Core workflow
+
+Student Registration
+→ Student Profile
+→ Career Goal Selection
+→ Academic and Technical Data Collection
+→ Python-Based Analysis
+→ Skill-Gap Identification
+→ AI-Powered Recommendations
+→ Personalized Learning Roadmap
+→ Interview Preparation
+→ Achievement Tracking
+→ Career Readiness Dashboard.
+
+### Main target users
+
+- MCA students.
+- BCA students.
+- B.Tech students.
+- Computer Science students.
+- IT students.
+- Students preparing for internships.
+- Students preparing for campus placements.
+- Students planning their technology careers.
+
+---
+
+# PART 2 – TECHNOLOGY STACK FOR GOOGLE AI STUDIO
+
+Build this as a full-stack web application using technologies compatible with Google AI Studio Build Mode.
+
+### Frontend
+
+- React.js.
+- TypeScript.
+- Tailwind CSS.
+- Responsive modern component architecture.
+- React Router.
+- Lucide React icons.
+- Recharts for charts and analytics.
+- Framer Motion for subtle animations.
+- React Hook Form for forms where appropriate.
+
+### Backend
+
+Use the server-side Node.js runtime provided by Google AI Studio.
+
+- Node.js.
+- TypeScript.
+- REST-style API routes.
+- Server-side Gemini integration.
+- Secure business logic.
+- Input validation.
+- Error handling.
+
+### Database and Authentication
+
+Use Firebase integration.
+
+- Firebase Firestore for persistent data.
+- Firebase Authentication for user accounts.
+- Google Sign-In where supported.
+- User-specific security rules.
+- Firestore timestamps.
+- Secure student data access.
+
+Use Firestore as the primary application database rather than introducing an unnecessary second database.
+
+### AI Integration
+
+Use Google's Gemini API through the server-side runtime.
+
+AI must power:
+
+- Personalized student recommendations.
+- Skill-gap explanations.
+- Learning roadmap generation.
+- Career guidance.
+- Interview question generation.
+- Mock interview evaluation.
+- Learning-plan generation.
+- Project suggestions.
+
+Keep all API credentials on the server side using Google AI Studio Secrets.
+
+Never expose API keys in frontend JavaScript, browser storage, or public source files.
+
+### Python Analytics
+
+The original project requires Python for student data processing, score calculation, career-skill comparison, and skill-gap identification.
+
+Create a modular Python analytics service using:
+
+- Python.
+- FastAPI.
+- Pandas.
+- NumPy.
+
+Treat this as an optional separately deployable microservice, with an integration adapter in the main application.
+
+Implement the main deterministic analytics engine in the Node.js backend as well, so that the website works immediately without requiring the separate Python service.
+
+Where the Python service is configured, use it for data-processing operations and verify that its output matches the application's documented scoring rules.
+
+Provide Python service deployment instructions for Cloud Run.
+
+Do not falsely claim that a Python service is deployed or connected when it is not.
+
+---
+
+# PART 3 – VISUAL DESIGN AND BRANDING
+
+Create a premium SaaS design inspired by modern analytics, productivity, and AI dashboard applications.
+
+The website should feel clean, intelligent, futuristic, professional, and trustworthy.
+
+### Color palette
+
+- Deep Navy Blue: #142B53.
+- Royal Blue: #3267D5.
+- Cyan: #26C6DA.
+- White: #FFFFFF.
+- Background: #F6F8FC.
+- Light Blue: #EAF1FF.
+- Text: #202B3C.
+- Success Green: #22A06B.
+- Warning Amber: #F2A93B.
+- Danger Red: #E35D6A.
+
+### Design requirements
+
+- Professional typography.
+- Rounded dashboard cards.
+- Soft shadows.
+- Consistent spacing.
+- Clean sidebar navigation.
+- Modern icons.
+- Attractive charts.
+- Smooth page transitions.
+- Subtle hover effects.
+- Elegant loading animations.
+- Consistent button styles.
+- Responsive tables.
+- Accessible color contrast.
+- Dark and light mode.
+
+Create a custom StudentPulse AI logo using a combination of a pulse waveform and an education or graduation symbol.
+
+Use a consistent visual identity throughout the application.
+
+Avoid excessive gradients, oversized text, unnecessary animations, and cluttered interfaces.
+
+---
+
+# PART 4 – PUBLIC LANDING PAGE
+
+Build an impressive landing page.
+
+### Navigation
+
+- Logo: StudentPulse AI.
+- Home.
+- Features.
+- How It Works.
+- Career Paths.
+- About.
+- Login.
+- Get Started.
+
+### Hero section
+
+Main heading:
+
+**Your Skills Today. Your Dream Career Tomorrow.**
+
+Subheading:
+
+"Discover your potential, identify skill gaps, and build a personalized learning journey with the power of AI."
+
+Buttons:
+
+- Get Started Free.
+- Explore Features.
+
+Include an attractive visual preview of the actual student dashboard.
+
+Show a sample readiness score, skill comparison, learning roadmap, and analytics preview.
+
+### Problem section
+
+Explain that students often struggle to connect academic marks, technical skills, projects, certifications, interviews, and career goals.
+
+Show how StudentPulse AI brings all these areas together.
+
+### Features section
+
+Display attractive feature cards for:
+
+1. Smart Career Readiness.
+2. AI Skill-Gap Analysis.
+3. Technical Skill Tracking.
+4. Academic Performance Analysis.
+5. AI Learning Roadmaps.
+6. Personalized Action Plans.
+7. AI Mock Interviews.
+8. Career Comparison.
+9. Project and Certification Tracking.
+10. Achievement and Streak System.
+
+### How it works
+
+Show five visual stages:
+
+1. Create Your Profile.
+2. Choose Your Dream Career.
+3. Add Your Skills and Projects.
+4. Analyze Your Readiness.
+5. Follow Your AI-Powered Learning Journey.
+
+### Footer
+
+Include About, Features, Contact, Privacy Policy, Terms, and copyright information.
+
+---
+
+# PART 5 – AUTHENTICATION AND STUDENT ONBOARDING
+
+Create a functional authentication system.
+
+### Registration
+
+Fields:
+
+- Full Name.
+- Email.
+- Password.
+- Confirm Password.
+- College Name.
+- Course.
+- Current Semester.
+
+### Login
+
+Fields:
+
+- Email.
+- Password.
+- Google Sign-In where configured.
+- Forgot Password.
+- Remember Me.
+
+### Authentication requirements
+
+- Firebase Authentication.
+- Protected dashboard routes.
+- Secure account access.
+- Password validation.
+- Clear error messages.
+- Logout functionality.
+- User-specific data isolation.
+
+### Multi-step onboarding
+
+Step 1: Personal Information.
+
+Step 2: Academic Information.
+
+Step 3: Career Interests.
+
+Step 4: Technical Skills.
+
+Step 5: Existing Projects and Certifications.
+
+Step 6: Interview Experience.
+
+After completing onboarding, automatically navigate to the dashboard.
+
+Provide an onboarding completion indicator.
+
+Allow students to edit all their information later.
+
+---
+
+# PART 6 – MAIN STUDENT DASHBOARD
+
+Create a polished and interactive student dashboard.
+
+### Sidebar navigation
+
+1. Overview.
+2. My Profile.
+3. Career Goals.
+4. My Skills.
+5. Academic Performance.
+6. Projects & Certifications.
+7. Skill-Gap Analysis.
+8. AI Recommendations.
+9. Learning Roadmap.
+10. My Action Plan.
+11. Interview Preparation.
+12. Career Comparison.
+13. Achievements.
+14. Progress Tracking.
+15. Notifications.
+16. Settings.
+17. Logout.
+
+### Dashboard header
+
+Display:
+
+"Welcome back, [Student Name]!"
+
+"Your journey to career readiness continues."
+
+Display the selected career role, profile avatar, notifications, and profile menu.
+
+### Dashboard summary cards
+
+Create six attractive cards:
+
+1. Career Readiness Score.
+2. Skills Tracked.
+3. Skill Gaps Identified.
+4. Projects Completed.
+5. Learning Progress.
+6. Interview Performance.
+
+Every value must come from the logged-in student's actual records.
+
+### Main dashboard sections
+
+- Career readiness circular chart.
+- Strongest skills.
+- Weakest skills.
+- Current career target.
+- Current learning roadmap.
+- Weekly progress chart.
+- Skill proficiency chart.
+- Upcoming learning tasks.
+- Recent achievements.
+- Latest AI recommendations.
+- Recent activity timeline.
+
+Include attractive empty states for new students.
+
+---
+
+# PART 7 – CAREER GOAL MANAGEMENT
+
+Build a career selection and career exploration module.
+
+Allow students to select one primary career goal and optionally save additional career interests.
+
+Include career paths such as:
+
+- Java Developer.
+- Python Developer.
+- Full Stack Developer.
+- Frontend Developer.
+- Backend Developer.
+- Software Engineer.
+- Data Analyst.
+- Data Scientist.
+
+Each career must have an editable skill-requirement dataset.
+
+### Example: Java Developer
+
+- Core Java.
+- Object-Oriented Programming.
+- Data Structures and Algorithms.
+- SQL.
+- JDBC.
+- Spring Boot.
+- Git and GitHub.
+- Problem Solving.
+- Technical Interview Skills.
+
+### Example: Data Analyst
+
+- Python.
+- SQL.
+- Excel.
+- Statistics.
+- Pandas.
+- NumPy.
+- Power BI.
+- Data Visualization.
+- Analytical Thinking.
+
+Display:
+
+- Career description.
+- Required technical skills.
+- Expected proficiency.
+- Skill importance.
+- Suggested projects.
+- Learning recommendations.
+
+Allow students to update their career goals.
+
+Whenever the primary career changes, refresh the career comparison and skill-gap analysis.
+
+---
+
+# PART 8 – TECHNICAL SKILL MANAGEMENT
+
+Create a My Skills page.
+
+Allow students to:
+
+- Add skills.
+- Edit skills.
+- Remove skills.
+- Update proficiency.
+- Add assessment scores.
+- Upload or link supporting evidence where appropriate.
+- Record learning progress.
+
+Proficiency levels:
+
+- Beginner.
+- Intermediate.
+- Advanced.
+- Expert.
+
+Map self-reported levels to indicative numerical values:
+
+Beginner: 25.
+
+Intermediate: 50.
+
+Advanced: 75.
+
+Expert: 90.
+
+Allow assessment evidence to be recorded separately, so the application can distinguish self-reported proficiency from assessment-based proficiency.
+
+### Skill table
+
+Columns:
+
+- Skill.
+- Current Proficiency.
+- Assessment Score.
+- Required Proficiency.
+- Skill Status.
+- Last Updated.
+- Actions.
+
+Skill status:
+
+- Good.
+- Moderate.
+- Weak.
+- Not Assessed.
+
+Use configurable initial thresholds:
+
+- 75–100: Good.
+- 50–74: Moderate.
+- Below 50: Weak.
+- Missing evidence: Not Assessed.
+
+---
+
+# PART 9 – ACADEMIC PERFORMANCE ANALYSIS
+
+Create a dedicated academic section.
+
+Students can add:
+
+- Semester.
+- Subject.
+- Marks obtained.
+- Maximum marks.
+- Assessment type.
+- Assessment date.
+
+Display:
+
+- CGPA.
+- Average marks.
+- Subject-wise performance.
+- Semester-wise comparison.
+- Assessment performance.
+- Academic strengths.
+- Areas requiring improvement.
+
+Charts:
+
+- Semester performance line chart.
+- Subject performance bar chart.
+- Marks distribution chart.
+
+Use data-processing logic to calculate accurate academic metrics.
+
+Do not assume missing marks are zero.
+
+Do not make academic performance the only factor in career readiness.
+
+---
+
+# PART 10 – PROJECTS, CERTIFICATIONS AND ACTIVITIES
+
+Build a professional project portfolio module.
+
+### Projects
+
+Students can add:
+
+- Project Name.
+- Project Description.
+- Category.
+- Technologies Used.
+- GitHub Repository URL.
+- Live Project URL.
+- Start Date.
+- Completion Date.
+- Project Status.
+
+Project status:
+
+- Planning.
+- In Progress.
+- Completed.
+
+Show projects in attractive cards.
+
+### Certifications
+
+Fields:
+
+- Certification Name.
+- Issuing Organization.
+- Issue Date.
+- Credential URL.
+- Related Skills.
+
+### Activities
+
+Include:
+
+- Hackathons.
+- Workshops.
+- Coding competitions.
+- Internships.
+- Technical events.
+- Other relevant activities.
+
+Connect these records with the student's career skills.
+
+Allow students to edit and delete their records.
+
+---
+
+# PART 11 – PYTHON-BASED SKILL-GAP ANALYSIS
+
+This is a central feature of StudentPulse AI.
+
+Create a fully functional skill-gap analysis engine.
+
+Compare the student's current skill proficiency with the requirements of the selected career.
+
+### Example: Java Developer
+
+| Skill | Current Score | Required Score |
+| Java | 85 | 90 |
+| SQL | 60 | 85 |
+| DSA | 35 | 85 |
+| OOP | 80 | 85 |
+| Spring Boot | 55 | 80 |
+
+### Formula
+
+Skill Gap = Required Score - Current Score.
+
+If the difference is positive, display an improvement requirement.
+
+If the current score is above the required level, display the skill as meeting or exceeding its target.
+
+If evidence is missing, display "Insufficient Evidence" instead of assuming zero ability.
+
+### Priority calculation
+
+Consider:
+
+- Size of skill gap.
+- Importance of the skill.
+- Relevance to the target career.
+
+Classify skills into:
+
+- High Priority.
+- Medium Priority.
+- Low Priority.
+
+### Analysis results
+
+Display:
+
+- Current proficiency.
+- Required proficiency.
+- Skill-gap percentage.
+- Career importance.
+- Priority.
+- Suggested learning approach.
+- Related learning resources or tasks.
+
+### Visualizations
+
+Include:
+
+- Current versus required bar chart.
+- Skill proficiency radar chart.
+- Skills needing improvement.
+- Strongest skills.
+- Overall skill-match score.
+
+### Career readiness calculation
+
+Use an indicative weighted model:
+
+- Technical skill match: 45%.
+- Project experience: 20%.
+- Academic performance: 10%.
+- Interview performance: 15%.
+- Learning consistency: 10%.
+
+Normalize each component to a score between 0 and 100.
+
+If data is missing for a component, do not silently assign zero. Renormalize available weights and display a separate data-coverage indicator.
+
+For technical skill matching:
+
+Calculate the weighted proficiency of assessed skills relative to their required values. Cap an individual skill's contribution at 100% of its required score while retaining its actual proficiency for display.
+
+All weights and thresholds must be configurable.
+
+Clearly label the readiness result as an indicative platform metric, not a scientifically validated probability of placement or employment.
+
+---
+
+# PART 12 – GEMINI AI RECOMMENDATION ENGINE
+
+Create a powerful AI Recommendations module using Gemini.
+
+Analyze:
+
+- Career goal.
+- Technical skills.
+- Skill-gap results.
+- Academic records.
+- Projects.
+- Certifications.
+- Interview performance.
+- Learning activity.
+
+Generate individualized guidance.
+
+### Example
+
+Student target: Java Developer.
+
+Potential gaps:
+
+- DSA.
+- SQL.
+- Spring Boot.
+- Technical interview performance.
+
+AI recommendations:
+
+1. Learn arrays, strings, sorting, and searching.
+2. Practice DSA questions.
+3. Complete intermediate SQL exercises.
+4. Build a Java and SQL-based project.
+5. Practice Core Java interview questions.
+6. Attempt mock interviews.
+7. Review weak areas every week.
+
+Every recommendation should include:
+
+- Title.
+- Detailed explanation.
+- Related skill.
+- Reason for recommendation.
+- Priority.
+- Difficulty level.
+- Estimated time.
+- Expected outcome.
+- Suggested next action.
+
+Include a button:
+
+**Generate Personalized AI Recommendations**
+
+AI must use the actual authenticated student's data.
+
+Do not allow AI to fabricate marks, projects, certifications, or skill scores.
+
+Use validated structured JSON responses for recommendations.
+
+Validate and sanitize AI results before saving them.
+
+If Gemini is unavailable, provide a deterministic rule-based fallback with a clear label indicating that the content is not AI-generated.
+
+---
+
+# PART 13 – PERSONALIZED AI LEARNING ROADMAP
+
+Add a dedicated Learning Roadmap feature.
+
+This is an important additional feature.
+
+Generate personalized learning roadmaps based on the student's skill gaps and target career.
+
+Offer:
+
+- 30-Day Roadmap.
+- 60-Day Roadmap.
+- 90-Day Roadmap.
+
+### Example: 30-Day Java Developer Roadmap
+
+Week 1: DSA Fundamentals.
+
+- Arrays.
+- Strings.
+- Sorting.
+- Searching.
+- Practice exercises.
+
+Week 2: SQL.
+
+- Database fundamentals.
+- Joins.
+- Aggregations.
+- Query practice.
+
+Week 3: Java Project Development.
+
+- OOP revision.
+- JDBC.
+- Database connectivity.
+- Small project development.
+
+Week 4: Interview Preparation.
+
+- Core Java questions.
+- DSA revision.
+- SQL interview questions.
+- Mock interview.
+
+Each roadmap task should contain:
+
+- Day or week.
+- Topic.
+- Skill.
+- Description.
+- Difficulty.
+- Estimated duration.
+- Expected outcome.
+- Completion status.
+
+Allow students to:
+
+- Start a roadmap.
+- Pause a roadmap.
+- Mark tasks as completed.
+- Update progress.
+- View completed and pending tasks.
+- Regenerate an updated roadmap.
+
+Roadmaps should adapt to the student's latest analysis.
+
+---
+
+# PART 14 – PERSONALIZED ACTION PLAN
+
+Create an interactive My Action Plan section.
+
+Convert recommendations into structured action plans.
+
+Organize tasks into:
+
+- Daily Tasks.
+- Weekly Goals.
+- Practice Exercises.
+- Learning Activities.
+- Project Activities.
+- Interview Preparation.
+
+Each task must support:
+
+- Title.
+- Description.
+- Related Skill.
+- Due Date.
+- Priority.
+- Estimated Duration.
+- Completion Status.
+- Notes.
+
+Task statuses:
+
+- Not Started.
+- In Progress.
+- Completed.
+
+Provide:
+
+- Overall progress bar.
+- Weekly completion rate.
+- Pending task count.
+- Completed task count.
+- Upcoming deadlines.
+
+Task completion must update the dashboard and progress analytics.
+
+---
+
+# PART 15 – AI MOCK INTERVIEW SYSTEM
+
+Create an AI-powered text-based mock interview module.
+
+Let students select:
+
+- Target role.
+- Topic.
+- Difficulty.
+- Number of questions.
+
+### Interview topics
+
+For Java:
+
+- Core Java.
+- OOP.
+- Collections.
+- Exception Handling.
+- Multithreading.
+- SQL.
+- DSA.
+
+For Data Analyst:
+
+- SQL.
+- Excel.
+- Python.
+- Statistics.
+- Data Visualization.
+- Business Analytics.
+
+Generate relevant questions with Gemini.
+
+Display one question at a time.
+
+Allow the student to type an answer.
+
+Evaluate answers based on:
+
+- Technical correctness.
+- Conceptual understanding.
+- Clarity.
+- Completeness.
+- Problem-solving approach.
+
+Give a score out of 100.
+
+Provide:
+
+- Strengths.
+- Weaknesses.
+- Improvement suggestions.
+- Example answer.
+- Explanation of the correct concept.
+
+### Interview summary
+
+Display:
+
+- Questions attempted.
+- Overall score.
+- Strong topics.
+- Weak topics.
+- Suggested next learning activities.
+
+Save the results in Firestore.
+
+Use structured AI output and handle failures gracefully.
+
+Clearly label the result as practice feedback, not a formal interview assessment.
+
+For the first release, make text-based interviews genuinely functional. Do not display nonfunctional voice or video controls.
+
+---
+
+# PART 16 – CAREER READINESS ANALYTICS
+
+Create a comprehensive readiness dashboard.
+
+Include:
+
+1. Overall Career Readiness Score.
+2. Technical Skill Match.
+3. Academic Performance.
+4. Project Experience.
+5. Certification and Activity Evidence.
+6. Interview Performance.
+7. Learning Consistency.
+8. Historical Progress.
+
+Provide:
+
+- Circular charts.
+- Line charts.
+- Bar charts.
+- Radar charts.
+- Skill comparisons.
+- Progress indicators.
+
+Add time filters:
+
+- Last 7 Days.
+- Last 30 Days.
+- Last 90 Days.
+- All Time.
+
+Make every chart reflect actual application data.
+
+---
+
+# PART 17 – CAREER COMPARISON TOOL
+
+Add another important feature: Career Comparison.
+
+Allow students to select two different target career paths and compare their current readiness.
+
+Example:
+
+Java Developer vs Data Analyst.
+
+Display:
+
+- Required skills for Career A.
+- Required skills for Career B.
+- Student's current skills.
+- Missing skills for both careers.
+- Shared technical skills.
+- Career-specific skill gaps.
+- Suggested learning paths.
+- Indicative readiness scores for both careers.
+
+Use a comparison bar chart and radar chart.
+
+Add a clear explanation of which skill areas need to be developed for each path.
+
+Allow students to save a preferred primary career.
+
+Do not claim that either role guarantees better employment opportunities.
+
+---
+
+# PART 18 – GAMIFICATION AND ACHIEVEMENTS
+
+Add an Achievement and Streak System to make learning engaging.
+
+Students can earn badges based on real completed activities.
+
+### Achievement examples
+
+- First Step: Completed profile.
+- Skill Explorer: Added five skills.
+- Project Builder: Completed a project.
+- Consistent Learner: Completed tasks on seven different days.
+- Interview Starter: Completed first mock interview.
+- Skill Improver: Demonstrated improvement in an assessed skill.
+- Roadmap Finisher: Completed a learning roadmap.
+- Career Ready: Reached a configurable readiness milestone.
+
+### Daily learning streak
+
+Track consecutive days on which a student completes a qualifying learning activity.
+
+Display:
+
+- Current streak.
+- Longest streak.
+- Weekly activity calendar.
+- Total completed learning tasks.
+- Earned badges.
+
+### Badge gallery
+
+Show:
+
+- Locked achievements.
+- Earned achievements.
+- Achievement description.
+- Unlocking criteria.
+- Date earned.
+
+Achievements must be awarded by validated application events, not merely generated by AI.
+
+Do not reward fictional activity.
+
+---
+
+# PART 19 – PROGRESS TRACKING
+
+Create a dedicated progress analytics page.
+
+Track:
+
+- Skill improvements.
+- Academic performance.
+- Project completion.
+- Certification additions.
+- Interview scores.
+- Learning roadmap completion.
+- Action-plan completion.
+- Learning streaks.
+
+Display:
+
+- Weekly progress.
+- Monthly progress.
+- Career readiness history.
+- Skill improvement timeline.
+- Achievements.
+- Learning activity history.
+
+Show comparisons between the student's initial profile and latest profile.
+
+Provide filters and meaningful progress indicators.
+
+---
+
+# PART 20 – NOTIFICATIONS
+
+Create a notification center.
+
+Generate notifications for:
+
+- Upcoming tasks.
+- Overdue activities.
+- Newly generated AI recommendations.
+- Completed milestones.
+- Unlocked achievements.
+- Roadmap progress.
+- Interview feedback.
+
+Allow students to mark notifications as read.
+
+Keep notifications specific to each authenticated user.
+
+---
+
+# PART 21 – DATABASE ARCHITECTURE
+
+Use Firestore with a clear, scalable data structure.
+
+Create logical collections for:
+
+- users.
+- studentProfiles.
+- careerGoals.
+- careerRequirements.
+- studentSkills.
+- academicRecords.
+- assessments.
+- projects.
+- certifications.
+- activities.
+- interviews.
+- interviewFeedback.
+- recommendations.
+- learningRoadmaps.
+- actionPlans.
+- actionPlanTasks.
+- progressRecords.
+- achievements.
+- studentAchievements.
+- learningStreaks.
+- notifications.
+
+Each student-owned record must include the authenticated owner's user ID.
+
+Create appropriate document structures, timestamps, and references.
+
+Configure Firestore security rules so users can only access their own private records.
+
+Career requirements may be stored as application-managed reference data.
+
+Do not allow one student to read or edit another student's private records.
+
+---
+
+# PART 22 – SECURITY, PRIVACY AND VALIDATION
+
+Implement:
+
+- Firebase Authentication.
+- Firestore security rules.
+- Protected routes.
+- Server-side input validation.
+- Secure API handling.
+- Server-only Gemini API credentials.
+- Ownership checks for every user-specific operation.
+- Rate limiting for expensive AI operations where supported.
+- Safe error messages.
+- Secure handling of project URLs.
+- Appropriate privacy disclosures.
+
+Never expose student data to other student accounts.
+
+Do not use a public database configuration that allows unrestricted writes or reads.
+
+Do not place secret API keys in frontend files.
+
+---
+
+# PART 23 – SAMPLE DEMONSTRATION ACCOUNT
+
+Create a demo student profile with clearly identified fictional data.
+
+Example:
+
+Name: Rahul Sharma.
+
+Course: MCA.
+
+Target Career: Java Developer.
+
+Current Skills:
+
+- Java: 85/100.
+- SQL: 60/100.
+- DSA: 35/100.
+- OOP: 80/100.
+- Spring Boot: 55/100.
+
+Projects:
+
+- Student Management System.
+- Library Management System.
+
+Interview Performance: 65/100.
+
+Use this data to demonstrate:
+
+- Career readiness.
+- Skill-gap analysis.
+- Strongest skills.
+- Weakest skills.
+- AI recommendations.
+- 30-day learning roadmap.
+- Action plan.
+- Mock interview history.
+- Career comparison.
+- Achievement badges.
+- Progress analytics.
+
+Create a clear demo mode or properly seeded demonstration account.
+
+Never allow demo data to mix with another user's real records.
+
+Make it obvious that this profile is fictional sample data.
+
+---
+
+# PART 24 – UI AND FUNCTIONAL QUALITY REQUIREMENTS
+
+This application must be genuinely interactive.
+
+Mandatory requirements:
+
+- Every navigation link must work.
+- Every main button must perform its intended action.
+- All important forms must validate inputs.
+- Data must persist in Firestore.
+- Charts must use real data.
+- All student information must be editable.
+- Skill-gap analysis must calculate actual results.
+- AI recommendations must use the correct student profile.
+- Learning roadmaps must support progress updates.
+- Action-plan tasks must be completable.
+- Interviews must save answers and feedback.
+- Achievements must unlock based on real conditions.
+- Streaks must update using qualifying activities.
+- Career comparisons must use actual career requirements.
+- Dashboards must update when data changes.
+- Private pages must require authentication.
+
+Include:
+
+- Loading states.
+- Error states.
+- Empty states.
+- Success notifications.
+- Confirmation dialogs.
+- Mobile navigation.
+- Responsive tables.
+- Form validation.
+
+Do not create fake functionality or buttons that do nothing.
+
+Do not hardcode dashboard values when real user data is available.
+
+---
+
+# PART 25 – RESPONSIVE DESIGN
+
+The application must work properly on:
+
+- Desktop computers.
+- Laptops.
+- Tablets.
+- Mobile phones.
+
+Desktop:
+
+- Fixed sidebar.
+- Main content area.
+- Dashboard cards arranged in responsive grids.
+
+Mobile:
+
+- Collapsible navigation drawer.
+- Stacked dashboard cards.
+- Responsive charts.
+- Mobile-friendly forms.
+- Touch-friendly buttons.
+
+Ensure that no horizontal overflow or broken layouts occur.
+
+---
+
+# PART 26 – TESTING AND VALIDATION
+
+Test these workflows:
+
+1. Registration.
+2. Login.
+3. Logout.
+4. Onboarding.
+5. Profile editing.
+6. Career selection.
+7. Adding skills.
+8. Editing skills.
+9. Academic data entry.
+10. Adding projects.
+11. Adding certifications.
+12. Running skill-gap analysis.
+13. Generating recommendations.
+14. Generating a roadmap.
+15. Completing action-plan tasks.
+16. Taking a mock interview.
+17. Viewing interview feedback.
+18. Comparing careers.
+19. Unlocking achievements.
+20. Tracking learning streaks.
+21. Progress analytics.
+22. Notifications.
+23. Data privacy and protected routes.
+24. Mobile responsiveness.
+
+Also test missing data, invalid inputs, incomplete profiles, AI errors, and Firestore errors.
+
+---
+
+# PART 27 – GOOGLE AI STUDIO DEVELOPMENT INSTRUCTIONS
+
+Follow these instructions specifically for Google AI Studio Build Mode.
+
+1. Build a web application, not an Android application.
+2. Use React and TypeScript for the frontend.
+3. Use the built-in Node.js server runtime.
+4. Integrate Firebase Authentication and Firestore.
+5. Enable Firebase when prompted by the development environment.
+6. Use Gemini through server-side code.
+7. Keep API credentials in the Secrets configuration.
+8. Build a modular and reusable codebase.
+9. Use actual database integration, not local mock arrays as the permanent data source.
+10. Create reusable chart, form, card, table, and layout components.
+11. Test all important workflows in the live preview.
+12. Fix build errors and runtime errors.
+13. Keep the application functional even if an external AI service is temporarily unavailable.
+14. Include documentation for the optional Python analytics microservice.
+15. Prepare the project for GitHub export and Cloud Run deployment.
+
+### Development phases
+
+Phase 1: Complete UI and design system.
+
+Phase 2: Landing page and navigation.
+
+Phase 3: Authentication and onboarding.
+
+Phase 4: Database architecture and user profiles.
+
+Phase 5: Skills, academics, projects, and career management.
+
+Phase 6: Skill-gap analysis and career-readiness scoring.
+
+Phase 7: Gemini AI recommendations.
+
+Phase 8: Learning roadmaps and action plans.
+
+Phase 9: AI interview preparation.
+
+Phase 10: Career comparison and gamification.
+
+Phase 11: Analytics, notifications, and progress tracking.
+
+Phase 12: Security, testing, responsive optimization, and deployment readiness.
+
+Do not stop after a phase merely to report progress. Continue implementing the complete application wherever possible.
+
+If a configuration or external credential requires my action, explain exactly what I need to enable or provide.
+
+---
+
+# PART 28 – FINAL EXPECTED RESULT
+
+The final product must be a complete, polished, AI-powered career development web application.
+
+It should combine:
+
+- Student Profile Management.
+- Academic Analysis.
+- Technical Skill Tracking.
+- Career Goal Selection.
+- Project and Certification Tracking.
+- Python-Based Skill Analysis.
+- AI Skill-Gap Explanations.
+- Gemini AI Recommendations.
+- Personalized 30/60/90-Day Roadmaps.
+- Action Plans.
+- AI Mock Interviews.
+- Career Readiness Dashboard.
+- Career Comparison.
+- Achievement Badges.
+- Daily Learning Streaks.
+- Progress Tracking.
+- Notifications.
+
+The application must have a consistent design and fully connected user experience.
+
+The main priority is to create a working, attractive, demonstrable college major project that can later be expanded into a real student career-readiness platform.
+
+Do not provide only a plan or explanation.
+
+Do not just create a static UI.
+
+**Start building the complete StudentPulse AI application now.**

@@ -1,0 +1,6 @@
+{
+  "name": "StudentPulse AI",
+  "description": "AI-Powered Student Success, Skill Analysis and Career Readiness Platform helping college students evaluate skills, identify gaps, generate personalized learning roadmaps, and prepare for technical interviews.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
